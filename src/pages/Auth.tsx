@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "@/components/ui/sonner";
 import { Sparkles } from "lucide-react";
 import { z } from "zod";
 
@@ -39,7 +39,7 @@ const loginSchema = z.object({
 
 const Auth = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
+  
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -73,11 +73,7 @@ const Auth = () => {
 
     if (!validation.success) {
       const firstError = validation.error.errors[0];
-      toast({
-        title: "Date invalide",
-        description: firstError.message,
-        variant: "destructive",
-      });
+      toast.error("Date invalide", { description: firstError.message });
       return;
     }
 
@@ -96,16 +92,9 @@ const Auth = () => {
     setLoading(false);
 
     if (error) {
-      toast({
-        title: "Eroare la înregistrare",
-        description: error.message,
-        variant: "destructive",
-      });
+      toast.error("Eroare la înregistrare", { description: error.message });
     } else {
-      toast({
-        title: "Cont creat cu succes!",
-        description: "Te poți autentifica acum.",
-      });
+      toast.success("Cont creat cu succes!", { description: "Te poți autentifica acum." });
     }
   };
 
@@ -119,11 +108,7 @@ const Auth = () => {
 
     if (!validation.success) {
       const firstError = validation.error.errors[0];
-      toast({
-        title: "Date invalide",
-        description: firstError.message,
-        variant: "destructive",
-      });
+      toast.error("Date invalide", { description: firstError.message });
       return;
     }
 
@@ -137,11 +122,7 @@ const Auth = () => {
     setLoading(false);
 
     if (error) {
-      toast({
-        title: "Eroare la autentificare",
-        description: error.message,
-        variant: "destructive",
-      });
+      toast.error("Eroare la autentificare", { description: error.message });
     }
   };
 
