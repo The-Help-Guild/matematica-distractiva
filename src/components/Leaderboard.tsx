@@ -78,11 +78,11 @@ export const Leaderboard = () => {
 
   if (topScores.length === 0) {
     return (
-      <Card className="p-8 shadow-card">
-        <h3 className="text-3xl font-bold text-center mb-4 text-primary">
+      <Card className="p-6 sm:p-8 shadow-card">
+        <h3 className="text-2xl sm:text-3xl font-bold text-center mb-3 sm:mb-4 text-primary">
           🏆 Top Zilnic 🏆
         </h3>
-        <p className="text-xl text-center text-muted-foreground">
+        <p className="text-lg sm:text-xl text-center text-muted-foreground">
           Fii primul în top astăzi! 🌟
         </p>
       </Card>
@@ -90,27 +90,27 @@ export const Leaderboard = () => {
   }
 
   return (
-    <Card className="p-8 shadow-card">
-      <h3 className="text-3xl font-bold text-center mb-6 gradient-hero bg-clip-text text-transparent">
+    <Card className="p-6 sm:p-8 shadow-card">
+      <h3 className="text-2xl sm:text-3xl font-bold text-center mb-4 sm:mb-6 gradient-hero bg-clip-text text-transparent">
         🏆 Top Zilnic 🏆
       </h3>
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         {topScores.map((entry, index) => (
           <div
             key={index}
-            className={`p-6 rounded-2xl border-4 ${getColors(index)} flex items-center justify-between animate-pop shadow-playful`}
+            className={`p-4 sm:p-6 rounded-xl sm:rounded-2xl border-4 ${getColors(index)} flex items-center justify-between animate-pop shadow-playful`}
             style={{ animationDelay: `${index * 0.1}s` }}
           >
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3 sm:gap-4">
               {getIcon(index)}
               <div>
-                <p className="text-2xl font-bold">{entry.user_name}</p>
-                <p className="text-lg text-muted-foreground">
+                <p className="text-lg sm:text-xl md:text-2xl font-bold">{entry.user_name}</p>
+                <p className="text-sm sm:text-base md:text-lg text-muted-foreground">
                   Locul {index + 1}
                 </p>
               </div>
             </div>
-            <div className="text-4xl font-bold text-primary">
+            <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary">
               {entry.score} ⭐
             </div>
           </div>

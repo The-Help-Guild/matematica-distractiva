@@ -139,44 +139,44 @@ export const Exercise = ({ operationType, userName }: ExerciseProps) => {
   if (!exercise) return null;
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-8 relative">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 relative">
       {/* Score Display */}
-      <div className="absolute top-8 right-8 flex items-center gap-3 bg-card p-4 rounded-2xl shadow-card">
-        <img src={starImage} alt="star" className="w-10 h-10 animate-bounce-slow" />
-        <span className="text-3xl font-bold text-sunny">{score}</span>
+      <div className="absolute top-4 right-4 sm:top-8 sm:right-8 flex items-center gap-2 sm:gap-3 bg-card p-3 sm:p-4 rounded-xl sm:rounded-2xl shadow-card">
+        <img src={starImage} alt="stea" className="w-8 h-8 sm:w-10 sm:h-10 animate-bounce-slow" />
+        <span className="text-2xl sm:text-3xl font-bold text-sunny">{score}</span>
       </div>
 
-      <div className="max-w-4xl w-full space-y-8">
+      <div className="max-w-4xl w-full space-y-6 sm:space-y-8">
         {/* Exercise Display */}
-        <div className="bg-card p-12 rounded-3xl shadow-card space-y-8">
-          <div className="text-center space-y-4">
-            <h2 className="text-5xl font-bold text-foreground">
+        <div className="bg-card p-6 sm:p-8 md:p-12 rounded-2xl sm:rounded-3xl shadow-card space-y-6 sm:space-y-8">
+          <div className="text-center space-y-3 sm:space-y-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground">
               {exercise.num1} {exercise.operation} {exercise.num2} = ?
             </h2>
-            <p className="text-2xl text-muted-foreground italic">{currentEncouragement}</p>
+            <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground italic">{currentEncouragement}</p>
           </div>
 
           {/* Visual Representation */}
           {operationType === "subtraction" && (
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               <VisualRepresentation number={exercise.num1} />
-              <p className="text-center text-2xl font-bold text-playful">
+              <p className="text-center text-xl sm:text-2xl font-bold text-playful">
                 Dacă scot {exercise.num2}, câte rămân?
               </p>
             </div>
           )}
 
           {operationType === "addition" && (
-            <div className="space-y-6">
-              <div className="text-center text-2xl font-bold text-secondary mb-4">
+            <div className="space-y-4 sm:space-y-6">
+              <div className="text-center text-xl sm:text-2xl font-bold text-secondary mb-3 sm:mb-4">
                 Primul grup are {exercise.num1}:
               </div>
               <VisualRepresentation number={exercise.num1} />
-              <div className="text-center text-2xl font-bold text-secondary mt-6 mb-4">
+              <div className="text-center text-xl sm:text-2xl font-bold text-secondary mt-4 sm:mt-6 mb-3 sm:mb-4">
                 Al doilea grup are {exercise.num2}:
               </div>
               <VisualRepresentation number={exercise.num2} />
-              <p className="text-center text-2xl font-bold text-playful">
+              <p className="text-center text-xl sm:text-2xl font-bold text-playful">
                 Dacă le pun împreună, câte sunt în total?
               </p>
             </div>
@@ -185,18 +185,33 @@ export const Exercise = ({ operationType, userName }: ExerciseProps) => {
           {/* Answer Input */}
           <div className="flex flex-col items-center gap-6">
             <Input
-              type="number"
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
               value={userAnswer}
-              onChange={(e) => setUserAnswer(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+              onChange={(e) => {
+                const value = e.target.value.replace(/[^0-9]/g, '');
+                setUserAnswer(value);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && userAnswer !== "") {
+                  handleSubmit();
+                }
+                // Permite doar cifre, Backspace, Delete, Tab și săgețile
+                if (!/[0-9]/.test(e.key) && !['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                  e.preventDefault();
+                }
+              }}
               placeholder="Scrie răspunsul aici..."
-              className="text-4xl text-center h-20 max-w-xs border-4 border-primary/30 focus:border-primary rounded-2xl font-bold"
+              className="text-3xl sm:text-4xl text-center h-16 sm:h-20 w-full max-w-xs border-4 border-primary/30 focus:border-primary rounded-2xl font-bold"
+              maxLength={2}
             />
             <Button
               onClick={handleSubmit}
               size="lg"
               variant="success"
               disabled={userAnswer === ""}
+              className="w-full max-w-xs text-lg sm:text-xl"
             >
               Verifică Răspunsul ✓
             </Button>

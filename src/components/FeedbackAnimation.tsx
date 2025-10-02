@@ -12,7 +12,7 @@ const praises = [
   { title: "Fantastic! Perfect!", subtitle: "Minunat! Continuă tot așa!", emoji: "⭐" },
   { title: "Super! Magnific!", subtitle: "Ești incredibil de deștept!", emoji: "🌟" },
   { title: "Uimitor! Wow!", subtitle: "Ai un creier fantastic!", emoji: "🎯" },
-  { title: "Extraordinar!", subtitle: "Matematica e pasiunea ta!", emoji: "🏆" },
+  { title: "Extraordinar!", subtitle: "Matematica este pasiunea ta!", emoji: "🏆" },
   { title: "Spectaculos!", subtitle: "Ești un campion adevărat!", emoji: "👏" },
   { title: "Fenomenal!", subtitle: "Nimeni nu te poate opri!", emoji: "🚀" },
   { title: "Incredibil!", subtitle: "Ești o stea strălucitoare!", emoji: "✨" },
@@ -20,7 +20,7 @@ const praises = [
 
 const encouragements = [
   { title: "Aproape! Nu renunța!", subtitle: "Încearcă din nou, vei reuși!", emoji: "💪" },
-  { title: "Hmmm, mai gândește!", subtitle: "Poți s-o faci mai bine!", emoji: "🤔" },
+  { title: "Hmmm, mai gândește!", subtitle: "Poți să o faci mai bine!", emoji: "🤔" },
   { title: "Încearcă din nou!", subtitle: "Greșelile ne ajută să învățăm!", emoji: "📚" },
   { title: "Nu-i nimic! Hai să mai încerci!", subtitle: "Toată lumea greșește uneori!", emoji: "🌈" },
   { title: "Aproape corect!", subtitle: "Ești pe drumul cel bun!", emoji: "🎯" },
@@ -54,14 +54,14 @@ export const FeedbackAnimation = ({ isCorrect, onComplete }: FeedbackAnimationPr
   }, [isCorrect, onComplete]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4">
       {isCorrect ? (
         <div className="relative">
-          <div className="animate-pop flex flex-col items-center gap-6 bg-card p-12 rounded-3xl shadow-success border-4 border-success/30">
-            <CheckCircle2 className="w-40 h-40 text-success animate-bounce-slow" />
-            <p className="text-5xl font-bold text-success">{message.title} {message.emoji}</p>
-            <p className="text-3xl text-muted-foreground font-semibold">{message.subtitle}</p>
-            <div className="flex gap-4 text-6xl animate-bounce-slow">
+          <div className="animate-pop flex flex-col items-center gap-4 sm:gap-6 bg-card p-6 sm:p-8 md:p-12 rounded-2xl sm:rounded-3xl shadow-success border-4 border-success/30 max-w-lg">
+            <CheckCircle2 className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 text-success animate-bounce-slow" />
+            <p className="text-3xl sm:text-4xl md:text-5xl font-bold text-success text-center">{message.title} {message.emoji}</p>
+            <p className="text-xl sm:text-2xl md:text-3xl text-muted-foreground font-semibold text-center">{message.subtitle}</p>
+            <div className="flex gap-2 sm:gap-4 text-4xl sm:text-5xl md:text-6xl animate-bounce-slow">
               🎊 🎉 ⭐ 🌟 ✨
             </div>
           </div>
@@ -81,10 +81,10 @@ export const FeedbackAnimation = ({ isCorrect, onComplete }: FeedbackAnimationPr
           ))}
         </div>
       ) : (
-        <div className="animate-pop flex flex-col items-center gap-6 bg-card p-12 rounded-3xl shadow-card border-4 border-warning/30">
-          <XCircle className="w-40 h-40 text-warning animate-wiggle" />
-          <p className="text-5xl font-bold text-warning">{message.title} {message.emoji}</p>
-          <p className="text-3xl text-muted-foreground font-semibold">{message.subtitle}</p>
+        <div className="animate-pop flex flex-col items-center gap-4 sm:gap-6 bg-card p-6 sm:p-8 md:p-12 rounded-2xl sm:rounded-3xl shadow-card border-4 border-warning/30 max-w-lg">
+          <XCircle className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 text-warning animate-wiggle" />
+          <p className="text-3xl sm:text-4xl md:text-5xl font-bold text-warning text-center">{message.title} {message.emoji}</p>
+          <p className="text-xl sm:text-2xl md:text-3xl text-muted-foreground font-semibold text-center">{message.subtitle}</p>
         </div>
       )}
     </div>
