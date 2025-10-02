@@ -38,12 +38,9 @@ export const Leaderboard = () => {
   const fetchTopScores = async () => {
     const today = new Date().toISOString().split('T')[0];
     
+    // Folosește funcția PostgreSQL securizată care returnează doar Top 3
     const { data, error } = await supabase
-      .from('daily_scores')
-      .select('user_name, score')
-      .eq('date', today)
-      .order('score', { ascending: false })
-      .limit(3);
+      .rpc('get_daily_top_scores', { score_date: today });
 
     if (!error && data) {
       setTopScores(data);

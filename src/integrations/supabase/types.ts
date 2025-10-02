@@ -79,7 +79,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_daily_top_scores: {
+        Args: { score_date?: string }
+        Returns: {
+          date: string
+          score: number
+          user_name: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
