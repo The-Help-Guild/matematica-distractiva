@@ -20,7 +20,7 @@ export type Database = {
           date: string
           id: string
           score: number
-          user_id: string | null
+          user_id: string
           user_name: string
         }
         Insert: {
@@ -28,7 +28,7 @@ export type Database = {
           date?: string
           id?: string
           score?: number
-          user_id?: string | null
+          user_id: string
           user_name: string
         }
         Update: {
@@ -36,7 +36,7 @@ export type Database = {
           date?: string
           id?: string
           score?: number
-          user_id?: string | null
+          user_id?: string
           user_name?: string
         }
         Relationships: []
@@ -51,7 +51,7 @@ export type Database = {
           num2: number
           operation_type: string
           user_answer: number
-          user_id: string | null
+          user_id: string
           user_name: string
         }
         Insert: {
@@ -63,7 +63,7 @@ export type Database = {
           num2: number
           operation_type: string
           user_answer: number
-          user_id?: string | null
+          user_id: string
           user_name: string
         }
         Update: {
@@ -75,7 +75,7 @@ export type Database = {
           num2?: number
           operation_type?: string
           user_answer?: number
-          user_id?: string | null
+          user_id?: string
           user_name?: string
         }
         Relationships: []

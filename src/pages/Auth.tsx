@@ -8,6 +8,34 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Sparkles } from "lucide-react";
+import { z } from "zod";
+
+const signupSchema = z.object({
+  displayName: z
+    .string()
+    .trim()
+    .min(2, "Numele trebuie să aibă cel puțin 2 caractere")
+    .max(50, "Numele trebuie să aibă maxim 50 caractere")
+    .regex(/^[a-zA-ZăâîșțĂÂÎȘȚ\s-]+$/, "Numele poate conține doar litere, spații și liniuțe"),
+  email: z
+    .string()
+    .trim()
+    .email("Adresa de email nu este validă")
+    .max(255, "Email-ul trebuie să aibă maxim 255 caractere"),
+  password: z
+    .string()
+    .min(8, "Parola trebuie să aibă cel puțin 8 caractere")
+    .max(100, "Parola trebuie să aibă maxim 100 caractere"),
+});
+
+const loginSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .email("Adresa de email nu este validă")
+    .max(255, "Email-ul trebuie să aibă maxim 255 caractere"),
+  password: z.string().min(1, "Parola este obligatorie"),
+});
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -37,10 +65,17 @@ const Auth = () => {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!displayName.trim() || displayName.length < 2) {
+    const validation = signupSchema.safeParse({
+      displayName,
+      email,
+      password,
+    });
+
+    if (!validation.success) {
+      const firstError = validation.error.errors[0];
       toast({
-        title: "Nume invalid",
-        description: "Numele trebuie să aibă cel puțin 2 caractere.",
+        title: "Date invalide",
+        description: firstError.message,
         variant: "destructive",
       });
       return;
@@ -48,12 +83,12 @@ const Auth = () => {
 
     setLoading(true);
     const { error } = await supabase.auth.signUp({
-      email,
-      password,
+      email: validation.data.email,
+      password: validation.data.password,
       options: {
         emailRedirectTo: `${window.location.origin}/`,
         data: {
-          display_name: displayName,
+          display_name: validation.data.displayName,
         },
       },
     });
@@ -76,11 +111,27 @@ const Auth = () => {
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    const validation = loginSchema.safeParse({
+      email,
+      password,
+    });
+
+    if (!validation.success) {
+      const firstError = validation.error.errors[0];
+      toast({
+        title: "Date invalide",
+        description: firstError.message,
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
     
     const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
+      email: validation.data.email,
+      password: validation.data.password,
     });
 
     setLoading(false);
@@ -179,7 +230,7 @@ const Auth = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    minLength={6}
+                    minLength={8}
                   />
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
