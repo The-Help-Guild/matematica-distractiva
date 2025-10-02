@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Minus, X } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import heroImage from "@/assets/hero-bg.png";
 
 const Index = () => {
   const navigate = useNavigate();
 
-  const startExercise = (type: "subtraction" | "multiplication") => {
+  const startExercise = (type: "subtraction" | "addition") => {
     navigate("/exercise", { state: { operationType: type } });
   };
 
@@ -60,26 +60,26 @@ const Index = () => {
 
           <Card
             className="p-12 space-y-8 hover:scale-105 transition-all cursor-pointer shadow-playful bg-gradient-to-br from-secondary/10 to-playful/10 border-4 border-secondary/20"
-            onClick={() => startExercise("multiplication")}
+            onClick={() => startExercise("addition")}
           >
             <div className="flex justify-center">
               <div className="w-32 h-32 rounded-full gradient-playful flex items-center justify-center shadow-playful">
-                <X className="w-20 h-20 text-playful-foreground" strokeWidth={4} />
+                <Plus className="w-20 h-20 text-playful-foreground" strokeWidth={4} />
               </div>
             </div>
             <div className="text-center space-y-4">
-              <h2 className="text-4xl font-bold text-secondary">Înmulțire</h2>
+              <h2 className="text-4xl font-bold text-secondary">Adunare</h2>
               <p className="text-xl text-muted-foreground">
-                Descoperă înmulțirea până la 10!
+                Descoperă adunarea până la 10!
               </p>
             </div>
             <Button
               size="lg"
               variant="secondary"
               className="w-full"
-              onClick={() => startExercise("multiplication")}
+              onClick={() => startExercise("addition")}
             >
-              Începe Înmulțirea! 🚀
+              Începe Adunarea! 🚀
             </Button>
           </Card>
         </div>

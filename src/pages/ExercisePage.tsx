@@ -6,7 +6,7 @@ import { ArrowLeft } from "lucide-react";
 const ExercisePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const operationType = location.state?.operationType as "subtraction" | "multiplication";
+  const operationType = location.state?.operationType as "subtraction" | "addition";
 
   if (!operationType) {
     navigate("/");

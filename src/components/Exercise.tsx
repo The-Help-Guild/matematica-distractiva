@@ -6,7 +6,7 @@ import { FeedbackAnimation } from "./FeedbackAnimation";
 import starImage from "@/assets/star.png";
 
 interface ExerciseProps {
-  operationType: "subtraction" | "multiplication";
+  operationType: "subtraction" | "addition";
 }
 
 interface ExerciseData {
@@ -43,13 +43,14 @@ export const Exercise = ({ operationType }: ExerciseProps) => {
         operation: "-",
       });
     } else {
+      // Addition
       const num1 = Math.floor(Math.random() * 10) + 1;
-      const num2 = Math.floor(Math.random() * 10) + 1;
+      const num2 = Math.floor(Math.random() * (10 - num1)) + 1;
       setExercise({
         num1,
         num2,
-        answer: num1 * num2,
-        operation: "×",
+        answer: num1 + num2,
+        operation: "+",
       });
     }
     setUserAnswer("");
@@ -109,21 +110,18 @@ export const Exercise = ({ operationType }: ExerciseProps) => {
             </div>
           )}
 
-          {operationType === "multiplication" && (
+          {operationType === "addition" && (
             <div className="space-y-6">
               <div className="text-center text-2xl font-bold text-secondary mb-4">
-                {exercise.num1} grupuri de câte {exercise.num2}:
+                Primul grup are {exercise.num1}:
               </div>
-              {Array.from({ length: exercise.num1 }).map((_, groupIndex) => (
-                <div key={groupIndex} className="mb-6">
-                  <p className="text-xl font-bold text-accent mb-2">
-                    Grupul {groupIndex + 1}:
-                  </p>
-                  <VisualRepresentation number={exercise.num2} />
-                </div>
-              ))}
+              <VisualRepresentation number={exercise.num1} />
+              <div className="text-center text-2xl font-bold text-secondary mt-6 mb-4">
+                Al doilea grup are {exercise.num2}:
+              </div>
+              <VisualRepresentation number={exercise.num2} />
               <p className="text-center text-2xl font-bold text-playful">
-                În total, câte sunt?
+                Dacă le pun împreună, câte sunt în total?
               </p>
             </div>
           )}
