@@ -7,8 +7,9 @@ const ExercisePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const operationType = location.state?.operationType as "subtraction" | "addition";
+  const userName = localStorage.getItem("userName") || "";
 
-  if (!operationType) {
+  if (!operationType || !userName) {
     navigate("/");
     return null;
   }
@@ -25,7 +26,7 @@ const ExercisePage = () => {
           Înapoi Acasă
         </Button>
       </div>
-      <Exercise operationType={operationType} />
+      <Exercise operationType={operationType} userName={userName} />
     </div>
   );
 };

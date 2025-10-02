@@ -14,7 +14,66 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      daily_scores: {
+        Row: {
+          created_at: string
+          date: string
+          id: string
+          score: number
+          user_name: string
+        }
+        Insert: {
+          created_at?: string
+          date?: string
+          id?: string
+          score?: number
+          user_name: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          id?: string
+          score?: number
+          user_name?: string
+        }
+        Relationships: []
+      }
+      exercise_history: {
+        Row: {
+          correct_answer: number
+          created_at: string
+          id: string
+          is_correct: boolean
+          num1: number
+          num2: number
+          operation_type: string
+          user_answer: number
+          user_name: string
+        }
+        Insert: {
+          correct_answer: number
+          created_at?: string
+          id?: string
+          is_correct: boolean
+          num1: number
+          num2: number
+          operation_type: string
+          user_answer: number
+          user_name: string
+        }
+        Update: {
+          correct_answer?: number
+          created_at?: string
+          id?: string
+          is_correct?: boolean
+          num1?: number
+          num2?: number
+          operation_type?: string
+          user_answer?: number
+          user_name?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

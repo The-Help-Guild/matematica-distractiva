@@ -3,10 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { VisualRepresentation } from "./VisualRepresentation";
 import { FeedbackAnimation } from "./FeedbackAnimation";
+import { ExplanationDialog } from "./ExplanationDialog";
+import { supabase } from "@/integrations/supabase/client";
 import starImage from "@/assets/star.png";
 
 interface ExerciseProps {
   operationType: "subtraction" | "addition";
+  userName: string;
 }
 
 interface ExerciseData {
@@ -24,13 +27,16 @@ const encouragements = [
   "Ești pe drumul cel bun! 🌟",
 ];
 
-export const Exercise = ({ operationType }: ExerciseProps) => {
+export const Exercise = ({ operationType, userName }: ExerciseProps) => {
   const [exercise, setExercise] = useState<ExerciseData | null>(null);
   const [userAnswer, setUserAnswer] = useState("");
   const [showFeedback, setShowFeedback] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [score, setScore] = useState(0);
   const [currentEncouragement, setCurrentEncouragement] = useState("");
+  const [showExplanation, setShowExplanation] = useState(false);
+  const [lastExercise, setLastExercise] = useState<ExerciseData | null>(null);
+  const [lastUserAnswer, setLastUserAnswer] = useState(0);
 
   const generateExercise = () => {
     if (operationType === "subtraction") {
@@ -63,20 +69,70 @@ export const Exercise = ({ operationType }: ExerciseProps) => {
     generateExercise();
   }, [operationType]);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!exercise || userAnswer === "") return;
 
     const correct = parseInt(userAnswer) === exercise.answer;
     setIsCorrect(correct);
     setShowFeedback(true);
+    setLastExercise(exercise);
+    setLastUserAnswer(parseInt(userAnswer));
+
+    // Salvăm în istoric
+    await supabase.from('exercise_history').insert({
+      user_name: userName,
+      operation_type: operationType,
+      num1: exercise.num1,
+      num2: exercise.num2,
+      user_answer: parseInt(userAnswer),
+      correct_answer: exercise.answer,
+      is_correct: correct,
+    });
 
     if (correct) {
-      setScore((prev) => prev + 1);
+      const newScore = score + 1;
+      setScore(newScore);
+      
+      // Actualizăm sau inserăm scorul zilnic
+      const today = new Date().toISOString().split('T')[0];
+      
+      const { data: existingScore } = await supabase
+        .from('daily_scores')
+        .select('id, score')
+        .eq('user_name', userName)
+        .eq('date', today)
+        .maybeSingle();
+
+      if (existingScore) {
+        await supabase
+          .from('daily_scores')
+          .update({ score: newScore })
+          .eq('id', existingScore.id);
+      } else {
+        await supabase
+          .from('daily_scores')
+          .insert({
+            user_name: userName,
+            score: newScore,
+            date: today,
+          });
+      }
     }
   };
 
   const handleNext = () => {
     setShowFeedback(false);
+    
+    // Dacă răspunsul a fost greșit, arătăm explicația
+    if (!isCorrect && lastExercise) {
+      setShowExplanation(true);
+    } else {
+      generateExercise();
+    }
+  };
+
+  const handleExplanationClose = () => {
+    setShowExplanation(false);
     generateExercise();
   };
 
@@ -151,6 +207,17 @@ export const Exercise = ({ operationType }: ExerciseProps) => {
       {/* Feedback Animation */}
       {showFeedback && (
         <FeedbackAnimation isCorrect={isCorrect} onComplete={handleNext} />
+      )}
+
+      {/* Explanation Dialog */}
+      {showExplanation && lastExercise && (
+        <ExplanationDialog
+          open={showExplanation}
+          onClose={handleExplanationClose}
+          exercise={lastExercise}
+          userAnswer={lastUserAnswer}
+          operationType={operationType}
+        />
       )}
     </div>
   );
