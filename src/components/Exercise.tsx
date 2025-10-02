@@ -9,7 +9,6 @@ import starImage from "@/assets/star.png";
 
 interface ExerciseProps {
   operationType: "subtraction" | "addition";
-  userName: string;
 }
 
 interface ExerciseData {
@@ -27,7 +26,7 @@ const encouragements = [
   "Ești pe drumul cel bun! 🌟",
 ];
 
-export const Exercise = ({ operationType, userName }: ExerciseProps) => {
+export const Exercise = ({ operationType }: ExerciseProps) => {
   const [exercise, setExercise] = useState<ExerciseData | null>(null);
   const [userAnswer, setUserAnswer] = useState("");
   const [showFeedback, setShowFeedback] = useState(false);
@@ -37,6 +36,29 @@ export const Exercise = ({ operationType, userName }: ExerciseProps) => {
   const [showExplanation, setShowExplanation] = useState(false);
   const [lastExercise, setLastExercise] = useState<ExerciseData | null>(null);
   const [lastUserAnswer, setLastUserAnswer] = useState(0);
+  const [userId, setUserId] = useState<string>("");
+  const [userName, setUserName] = useState<string>("");
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setUserId(user.id);
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("display_name")
+          .eq("id", user.id)
+          .single();
+        
+        if (profile) {
+          setUserName(profile.display_name);
+        }
+      }
+    };
+
+    fetchUser();
+    generateExercise();
+  }, [operationType]);
 
   const generateExercise = () => {
     if (operationType === "subtraction") {
@@ -65,12 +87,8 @@ export const Exercise = ({ operationType, userName }: ExerciseProps) => {
     );
   };
 
-  useEffect(() => {
-    generateExercise();
-  }, [operationType]);
-
   const handleSubmit = async () => {
-    if (!exercise || userAnswer === "") return;
+    if (!exercise || userAnswer === "" || !userId) return;
 
     const correct = parseInt(userAnswer) === exercise.answer;
     setIsCorrect(correct);
@@ -80,6 +98,7 @@ export const Exercise = ({ operationType, userName }: ExerciseProps) => {
 
     // Salvăm în istoric
     await supabase.from('exercise_history').insert({
+      user_id: userId,
       user_name: userName,
       operation_type: operationType,
       num1: exercise.num1,
@@ -99,7 +118,7 @@ export const Exercise = ({ operationType, userName }: ExerciseProps) => {
       const { data: existingScore } = await supabase
         .from('daily_scores')
         .select('id, score')
-        .eq('user_name', userName)
+        .eq('user_id', userId)
         .eq('date', today)
         .maybeSingle();
 
@@ -112,6 +131,7 @@ export const Exercise = ({ operationType, userName }: ExerciseProps) => {
         await supabase
           .from('daily_scores')
           .insert({
+            user_id: userId,
             user_name: userName,
             score: newScore,
             date: today,

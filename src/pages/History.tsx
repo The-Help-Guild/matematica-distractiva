@@ -22,21 +22,22 @@ const History = () => {
   const navigate = useNavigate();
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [stats, setStats] = useState({ correct: 0, total: 0 });
-  const userName = localStorage.getItem("userName") || "";
 
   useEffect(() => {
-    if (!userName) {
-      navigate("/");
-      return;
-    }
     fetchHistory();
-  }, [userName]);
+  }, []);
 
   const fetchHistory = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      navigate("/auth");
+      return;
+    }
+
     const { data, error } = await supabase
       .from('exercise_history')
       .select('*')
-      .eq('user_name', userName)
+      .eq('user_id', user.id)
       .order('created_at', { ascending: false })
       .limit(50);
 
